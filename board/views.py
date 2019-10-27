@@ -11,11 +11,12 @@ def index(request):
 def search(request, category):
     matches = Question.objects.filter(category__iexact = category)
     paginator = Paginator(matches, 25)
-    
-    page = request.GET.get('page')
-    results = paginator.get_page(page)
-    return render(request, 'board/category_sort.html', {'matches': results})
-
+    try:
+        page = request.GET.get('page')
+        results = paginator.get_page(page)
+        return render(request, 'board/category_sort.html', {'matches': results})
+    except:
+        return render(request, 'board/category_sort.html', {'matches': None})
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'board/detail.html', {'question': question})
