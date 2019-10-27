@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		.button-container{
+			width: 100%;
+			background: white;
+			overflow-y: auto;
+		}
+		.button-container > a{
+			width: 100px;
+			height: 100px;
+		    float: left;
+		    background: lightgray;   
+		    margin: 15px;
+		    color: white;		
+		}
+		.button{
+			display: inline-flex;
+			text-align: center;
+			background-image: radial-gradient(violet, blueviolet);
+			border-radius: 20px;
+			height: 120px;
+			width: 200px;
+			float: left;
+			margin:2%;
+			text-decoration: none;	
+		}
+		.text{
+			color: white;
+			vertical-align: middle;
+			margin:auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="button-container">
+		{% if matches %}
+			<ul>
+			{% for question in matches %}
+				<a href="/board/{{question.id}}/" class="button">
+				<center class=text>
+				  {{question.category}} for {{question.score}}
+			    </center>
+				</a>
+				{% endfor %}
+			</ul>
+		{% else %}
+	  <p>No questions</p>
+		{% endif %}
+	</div>
+	<div class="pagination">
+		<span class="step-links">
+			{%if matches.has_previous %}
+				<a href="?page=1">&laquo; first</a>
+            	<a href="?page={{ matches.previous_page_number }}">previous</a>
+        	{% endif %}
+        	<span class="current">
+            	Page {{ matches.number }} of {{ matches.paginator.num_pages }}.
+	        </span>
+
+	        {% if matches.has_next %}
+	            <a href="?page={{ matches.next_page_number }}">next</a>
+	            <a href="?page={{ matches.paginator.num_pages }}">last &raquo;</a>
+	        {% endif %}
+		</span>
+	</div>
+</body>
+</html>

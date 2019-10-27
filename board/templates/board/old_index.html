@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		.button-container{
+			width: 100%;
+			background: white;
+			overflow-y: auto;
+		}/*
+		.button-container > a{
+			width: 100px;
+			height: 100px;
+		    float: left;
+		    background: lightgray;   
+		    margin: 15px;
+		    color: white;		}*/
+		.button{
+			display: inline-block;
+			text-align: center;
+			overflow-wrap: break-word;
+			word-wrap : break-word;
+			background-image: radial-gradient(violet, blueviolet);
+			border-radius: 20px;
+			height: 120px;
+			width: 200px;
+			float: left;
+			margin:2%;
+			vertical-align: middle;
+			color: white;
+			text-decoration: none;	
+		}
+	</style>
+</head>
+<body>
+	<div class="button-container">
+		{% if latest_questions_list %}
+			<ul>
+			{% for question in latest_questions_list %}
+				<a href="/board/{{question.id}}/" class="button">
+				<center>
+				  {{question.category}} for {{question.score}}
+			    </center>
+				</a>
+				{% endfor %}
+			</ul>
+		{% else %}
+	  <p>No questions<p>
+		{% endif %}
+</div>
+</body>
+</html>
