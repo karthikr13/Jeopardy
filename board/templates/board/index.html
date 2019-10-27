@@ -121,7 +121,6 @@ h1, h2, h3, h4, h5 {
 <header id="header">
 <h1>Welcome to Jeopardy!</h1>
 </header>
-<nav id="navigation"><a href="index.html" title="Back to homepage">Home</a></nav>
 <main class="main">
   <div id="main-left">
     <h2>Using this webapp</h2>
@@ -134,7 +133,7 @@ h1, h2, h3, h4, h5 {
     <p>Or, press the "Random" button to try your hand at a random question!</p>
   </div>
 <div id="main-right">
-<form name="form1" class="form" onsubmit="this.action = '/board/' + this.category.value;">
+<form name="form1" class="form" onsubmit="this.action = '/board/' + this.category.value + '/' + this.points.value;">
   <div>
     <label for="textfield2" class="label">Category:</label>
     <input id="category" type="text" class="textfield">

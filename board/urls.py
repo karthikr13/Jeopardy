@@ -11,6 +11,7 @@ from . import views
 
 urlpatterns = [
         path('', views.index, name = 'index'),
-        path('board/<int:question_id>/', views.detail, name = 'detail'),
-        path('board/<str:category>', views.search, name = 'search')
+        path('<int:question_id>/', views.detail, name = 'detail'),
+        path('<str:category>/', views.search_category, name = 'search'),
+        path('<str:category>/<int:score>', views.search_category_score, name = 'search')
 ]
