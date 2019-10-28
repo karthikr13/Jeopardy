@@ -8,6 +8,28 @@ def index(request):
     #context = {'latest_questions_list': last_questions}
     return render(request, 'board/index.html')
 
+def search(request, search_string):
+    split_search = search_string.split('&')
+    terms = [None, None, None, None]
+    for i, term in enumerate(split_search):
+        terms[i] = term.split('=')[1]
+        if not terms[i]:
+            terms[i] = 'All'
+    matches = Question.objects.all()
+    if terms[0] != 'All':
+        matches = matches.filter(category__iexact = terms[0])
+    if terms[1] != 'All':
+        matches = matches.filter(score__exact = terms[1])
+    header = 'Search results for category = ' + terms[0] + ', score = ' + terms[1]
+    header = header.title()
+    paginator = Paginator(matches, 25)
+    try:
+        page = request.GET.get('page')
+        results = paginator.get_page(page)
+        return render(request, 'board/category_sort.html', {'header': header, 'matches': results})
+    except:
+        return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
+
 def search_category(request, category):
     matches = Question.objects.filter(category__iexact = category)
     paginator = Paginator(matches, 25)

@@ -133,7 +133,7 @@ h1, h2, h3, h4, h5 {
     <p>Or, press the "Random" button to try your hand at a random question!</p>
   </div>
 <div id="main-right">
-<form name="form1" class="form" onsubmit="this.action = '/board/' + this.category.value + '/' + this.points.value;">
+<form name="form1" class="form" onsubmit="this.action = '/board/category=' + this.category.value + '&points=' + this.points.value + '&startDate=' + this.startDate.value + '&endDate=' + this.endDate.value;">
   <div>
     <label for="textfield2" class="label">Category:</label>
     <input id="category" type="text" class="textfield">
@@ -143,10 +143,14 @@ h1, h2, h3, h4, h5 {
       <input id="points" type="text" class="textfield">
 	</div>
 	<div>
-      <label for="textfield2" class="label">Date aired:</label>
-      <input type="date">
+      <label for="textfield2" class="label">Start date:</label>
+      <input id="startDate" type="date" class="textfield">
 	</div>
-    <input type="submit" class="button" name="button" id="button" value="Search">
+  <div>
+      <label for="textfield2" class="label">End date:</label>
+      <input id="endDate" type="date" class = "textfield">
+  </div>
+  <input type="submit" class="button" name="button" id="button" value="Search">
 </form>
 <script>
   function get_search_url(){
