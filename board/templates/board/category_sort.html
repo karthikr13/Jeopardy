@@ -88,23 +88,23 @@
 	  <p>No questions</p>
 		{% endif %}
 	</div>
-	{% if matches %}
 	<div class="pagination">
 		<span class="step-links">
-			{%if matches.has_previous %}
+			{% if matches and matches.has_previous %}
 				<a href="?page=1">&laquo; first</a>
             	<a href="?page={{ matches.previous_page_number }}">previous</a>
         	{% endif %}
+        	{% if matches %}
         	<span class="current">
-            	Page {{ matches.number }} of {{ matches.paginator.num_pages }}.
+            	Page {{ matches.number }} of {{ matches.paginator.num_pages }}
 	        </span>
-
-	        {% if matches.has_next %}
+	        {% endif %}
+	        {% if matches and matches.has_next %}
 	            <a href="?page={{ matches.next_page_number }}">next</a>
 	            <a href="?page={{ matches.paginator.num_pages }}">last &raquo;</a>
 	        {% endif %}
+	        <a href="/board">Return to search</a>
 		</span>
 	</div>
-	{% endif %}
 </body>
 </html>
