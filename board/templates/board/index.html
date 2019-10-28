@@ -93,7 +93,7 @@ h1, h2, h3, h4, h5 {
 #main-right .form .textfield {
   width: 100%;
 }
-.main #main-right #button {
+.main #button, #button2 {
   text-align: center;
   padding-top: 7px;
   padding-bottom: 7px;
@@ -123,7 +123,8 @@ h1, h2, h3, h4, h5 {
 </header>
 <main class="main">
   <div id="main-left">
-    <h2>Using this webapp</h2>
+    <form name="form2" class="form" onsubmit="this.action = '/board/random';"> 
+      <h2>Using this webapp</h2>
     <p>Start by entering terms in the search bar on the right. You&nbsp;can filter by:</p>
     <ul>
       <li>Category</li>
@@ -131,6 +132,10 @@ h1, h2, h3, h4, h5 {
       <li>The date the question aired</li>
     </ul>
     <p>Or, press the "Random" button to try your hand at a random question!</p>
+    <input type="submit" class="button" name="button" id="button2" value="Random">
+  </form>
+
+    
   </div>
 <div id="main-right">
 <form name="form1" class="form" onsubmit="this.action = '/board/category=' + this.category.value + '&points=' + this.points.value + '&startDate=' + this.startDate.value + '&endDate=' + this.endDate.value;">

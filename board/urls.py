@@ -12,7 +12,8 @@ from . import views
 urlpatterns = [
         path('', views.index, name = 'index'),
         path('<int:question_id>/', views.detail, name = 'detail'),
-        path('<str:search_string>/', views.search, name = 'search'),
+        path('random/', views.random_question, name = 'random'), 
+        path('<str:search_string>/', views.search, name = 'search')
 ]
 '''
 path('<str:category>/', views.search_category, name = 'search'),

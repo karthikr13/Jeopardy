@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Question
 from django.utils.dateparse import parse_date
+import random
 # Create your views here.
 
 def index(request):
@@ -51,6 +52,9 @@ def search(request, search_string):
     except:
         return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
 
+def random_question(request):
+    question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
+    return render(request, 'board/detail.html', {'question': question})
 def search_category(request, category):
     matches = Question.objects.filter(category__iexact = category)
     paginator = Paginator(matches, 25)
