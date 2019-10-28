@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Question
+from django.utils.dateparse import parse_date
 # Create your views here.
 
 def index(request):
@@ -16,12 +17,32 @@ def search(request, search_string):
         if not terms[i]:
             terms[i] = 'All'
     matches = Question.objects.all()
+    header = ''
     if terms[0] != 'All':
         matches = matches.filter(category__iexact = terms[0])
+        header += terms[0].title()
+    else:
+        header += 'All questions'
     if terms[1] != 'All':
         matches = matches.filter(score__exact = terms[1])
-    header = 'Search results for category = ' + terms[0] + ', score = ' + terms[1]
-    header = header.title()
+        header += ' for ' + terms[1]
+    else:
+        header += ' for any points'
+    if terms[2] != 'All':
+        header += ', asked after ' + terms[2]
+        terms[2] = parse_date(terms[2])
+        matches = matches.filter(ask_date__gte = terms[2])
+        asked = True
+    else:
+        asked = False
+    if terms[3] != 'All':
+        if asked:
+            header += ' and before ' + terms[3]
+        else:
+            header += ', asked before' + terms[3]
+        terms[3] = parse_date(terms[3])
+        matches = matches.filter(ask_date__lte = terms[3])
+
     paginator = Paginator(matches, 25)
     try:
         page = request.GET.get('page')
