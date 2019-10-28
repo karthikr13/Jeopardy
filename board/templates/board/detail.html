@@ -21,6 +21,7 @@ input{
 </style>
 
 <h2>{{ question.question_text }}</h2>
+<p>Asked on {{ question.ask_date }} </p>
 <div id = 'id_1'>
 {% for a in question.answer_set.all %}
 	<input type="button" class="button" id="button1" onclick = "update('{{a.answer_text}}')" value="Reveal">
@@ -28,8 +29,8 @@ input{
 </div>
 <html>
 <script type="text/javascript">
-	var text;
-	function update(text){
-    	document.getElementById('id_1').innerHTML = text;
+	var answer;
+	function update(answer){
+    	document.getElementById('id_1').innerHTML = answer;
 }
 </script>
