@@ -1,24 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 	<style type="text/css">
+		body {
+		  background-color: #F5F5F5;
+		  margin-top: 0px;
+		  margin-right: 0px;
+		  margin-bottom: 0px;
+		  margin-left: 0px;
+		}
+		p,
+		a,
+		ul,
+		ol,
+		li,
+		label,
+		input{
+		  font-family: muli, sans-serif;
+		  font-style: normal;
+		  font-weight: 300;
+		  font-size: 17px;
+		}
+		h1{
+		    font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+		    font-style: normal;
+		    font-weight: 400;
+		    text-transform: uppercase;
+		}
+		#header {
+		    padding-top: 25px;
+		    padding-bottom: 25px;
+		    background-color: #D848DE;
+		    border-bottom: 4px solid #EB232F;
+		}
+		#header h1 {
+		    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
+		    font-style: normal;
+		    font-weight: 400;
+		    font-size: 42px;
+		    text-align: center;
+		    margin-top: 0px;
+		    margin-bottom: 0px;
+		    text-transform: none;
+		}
 		.button-container{
 			width: 100%;
-			background: white;
 			overflow-y: auto;
-		}
-		.button-container > a{
-			width: 100px;
-			height: 100px;
-		    float: left;
-		    background: lightgray;   
-		    margin: 15px;
-		    color: white;		
 		}
 		.button{
 			display: inline-flex;
 			text-align: center;
-			background-image: radial-gradient(violet, blueviolet);
+			background-image: radial-gradient(#E199D2, #D848DE);
+			/*background-color: #D848DE;*/
 			border-radius: 20px;
 			height: 120px;
 			width: 200px;
@@ -27,14 +61,16 @@
 			text-decoration: none;	
 		}
 		.text{
-			color: white;
+			color: black;
 			vertical-align: middle;
 			margin:auto;
 		}
 	</style>
 </head>
 <body>
-	<h1>{{ header }}</h1>
+	<header id = "header">
+		<h1> {{ header }}</h1>
+	</header>
 	<div class="button-container">
 		{% if matches %}
 			<ul>

@@ -43,7 +43,7 @@ def get_data():
                 airdate = parse_date(airdate)
                 
                 if not value:
-                    value = 0
+                    continue
                 q = Question(question_text = q_text, score = value, category = cat, ask_date = airdate)
                 q.save()
                 q.answer_set.create(answer_text = a_text)
