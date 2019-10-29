@@ -15,6 +15,7 @@
 		ul,
 		ol,
 		li,
+		button,
 		span, 
 		label,
 		input{
@@ -77,12 +78,20 @@
 		{% if matches %}
 			<ul>
 			{% for question in matches %}
-				<a href="/board/{{question.id}}/" class="button">
-				<center class=text>
-				  {{question.category}} for {{question.score}}
-			    </center>
-				</a>
-				{% endfor %}
+				{% if question %}
+					<a href="/board/{{question.id}}/" class="button">
+					<center class=text>
+					  {{question.category}} for {{question.score}}
+				    </center>
+					</a>
+				{% else %}
+					<button class="button">
+						<center class=text>
+						  Free question
+					    </center>
+					</button>
+				{% endif %}
+			{% endfor %}
 			</ul>
 		{% else %}
 	  <p>No questions</p>

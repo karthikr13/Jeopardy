@@ -6,8 +6,6 @@ import random
 # Create your views here.
 
 def index(request):
-    #last_questions = Question.objects.order_by('-ask_date')[:5]
-    #context = {'latest_questions_list': last_questions}
     return render(request, 'board/index.html')
 
 def search(request, search_string):
@@ -52,30 +50,19 @@ def search(request, search_string):
     except:
         return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
 
+def gameboard(request):
+    questions = [None] * 25
+
+    for i in range(0, 5):
+        question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
+        cat = question.category
+        matches = Question.objects.filter(category__iexact = cat)[:5]
+        for j, match in enumerate(matches):
+            questions[i + j*5] = match
+    return render(request, 'board/category_sort.html', {'matches': questions})
 def random_question(request):
     question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
     return render(request, 'board/detail.html', {'question': question})
-def search_category(request, category):
-    matches = Question.objects.filter(category__iexact = category)
-    paginator = Paginator(matches, 25)
-    header = category.title() + ", all scores" 
-    try:
-        page = request.GET.get('page')
-        results = paginator.get_page(page)
-        return render(request, 'board/category_sort.html', {'header': header, 'matches': results})
-    except:
-        return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
-
-def search_category_score(request, category, score):
-    matches = Question.objects.filter(category__iexact = category, score__exact = score)
-    paginator = Paginator(matches, 25)
-    header = category.title() + " for " + str(score) + " points" 
-    try:
-        page = request.GET.get('page')
-        results = paginator.get_page(page)
-        return render(request, 'board/category_sort.html', {'header': header, 'matches': results})
-    except:
-        return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
