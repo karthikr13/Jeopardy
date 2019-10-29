@@ -52,14 +52,17 @@ def search(request, search_string):
 
 def gameboard(request):
     questions = [None] * 25
-
+    header = "Categories:"
     for i in range(0, 5):
         question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
         cat = question.category
+        header += " " + cat + ","
         matches = Question.objects.filter(category__iexact = cat)[:5]
         for j, match in enumerate(matches):
             questions[i + j*5] = match
-    return render(request, 'board/category_sort.html', {'matches': questions})
+    header = header[:-1]
+    return render(request, 'board/category_sort.html', {'header': header, 'matches': questions})
+
 def random_question(request):
     question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
     return render(request, 'board/detail.html', {'question': question})

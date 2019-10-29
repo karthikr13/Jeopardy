@@ -17,6 +17,7 @@ a,
 ul,
 ol,
 li,
+button,
 label,
 input{
   font-family: muli, sans-serif;
@@ -93,7 +94,7 @@ h1, h2, h3, h4, h5 {
 #main-right .form .textfield {
   width: 100%;
 }
-.main #button, #button2 {
+.main #button, #button2, #button3 {
   text-align: center;
   padding-top: 7px;
   padding-bottom: 7px;
@@ -109,12 +110,17 @@ h1, h2, h3, h4, h5 {
   cursor: pointer;
   border-radius: 15px;
 }
+.main #button2{
+  float:left;
+}
+.main #button3{
+  float:right;
+}
 .footer {
   display: block;
   padding-top: 25px;
   padding-bottom: 25px;
   text-align: center;
-}body p {
 }
 </style>
 </head>
@@ -124,7 +130,7 @@ h1, h2, h3, h4, h5 {
 </header>
 <main class="main">
   <div id="main-left">
-    <form name="form2" class="form" onsubmit="this.action = '/board/random';"> 
+    <form name="form2" class="form"> 
       <h2>Using this webapp</h2>
     <p>Start by entering terms in the search bar on the right. You&nbsp;can filter by:</p>
     <ul>
@@ -133,7 +139,9 @@ h1, h2, h3, h4, h5 {
       <li>The date the question aired</li>
     </ul>
     <p>Or, press the "Random" button to try your hand at a random question!</p>
-    <input type="submit" class="button" name="button" id="button2" value="Random">
+    <p>You can also play a game of Jeopardy by clicking the "Play Game" button.</p>
+    <input type="submit" class="button" name="button" id="button2" formaction = "/board/random" value="Random"></input>
+    <input type="submit" class="button" name="button" id="button3" formaction = "/board/gameboard" value="Play Game"></input>
   </form>
 
     
