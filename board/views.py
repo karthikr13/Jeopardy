@@ -49,23 +49,38 @@ def search(request, search_string):
         return render(request, 'board/category_sort.html', {'header': header, 'matches': results})
     except:
         return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
-
+def sort_rows(x):
+    if not x:
+        return 10000
+    return x.score
 def gameboard(request):
     questions = [None] * 25
     header = "Categories:"
+    cats = []
     for i in range(0, 5):
-        question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
+        question = None
+        while not question:
+            try:
+                question = Question.objects.filter(pk__exact = random.randint(0, Question.objects.count()))[0]
+            except:
+                question = None
         cat = question.category
+        cats.append(cat)
         header += " " + cat + ","
         matches = Question.objects.filter(category__iexact = cat)[:5]
         for j, match in enumerate(matches):
             questions[i + j*5] = match
     header = header[:-1]
-    return render(request, 'board/category_sort.html', {'header': header, 'matches': questions})
+    row1 = sorted(questions[0:5], key = lambda x: sort_rows(x))
+    row2 = sorted(questions[5:10], key = lambda x: sort_rows(x))
+    row3 = sorted(questions[10:15], key = lambda x: sort_rows(x))
+    row4 = sorted(questions[15:20], key = lambda x: sort_rows(x))
+    row5 = sorted(questions[20:25], key = lambda x: sort_rows(x))
+    return render(request, 'board/gameboard.html', {'header': header, 'cats': cats, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5': row5})
 
 def random_question(request):
     question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
-    return render(request, 'board/detail.html', {'question': question})
+    return render(request, 'board/random.html', {'question': question})
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

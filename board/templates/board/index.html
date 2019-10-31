@@ -116,6 +116,9 @@ h1, h2, h3, h4, h5 {
 .main #button3{
   float:right;
 }
+.submitbuttons {
+  text-align: center;
+}
 .footer {
   display: block;
   padding-top: 25px;
@@ -140,8 +143,10 @@ h1, h2, h3, h4, h5 {
     </ul>
     <p>Or, press the "Random" button to try your hand at a random question!</p>
     <p>You can also play a game of Jeopardy by clicking the "Play Game" button.</p>
-    <input type="submit" class="button" name="button" id="button2" formaction = "/board/random" value="Random"></input>
-    <input type="submit" class="button" name="button" id="button3" formaction = "/board/gameboard" value="Play Game"></input>
+    <div class = "submitbuttons">
+      <input type="submit" class="button" name="button" id="button2" formaction = "/board/random" value="Random"></input>
+      <input type="submit" class="button" name="button" id="button3" formaction = "/board/gameboard" value="Play Game"></input>
+    </div>
   </form>
 
     
@@ -164,6 +169,8 @@ h1, h2, h3, h4, h5 {
       <label for="textfield2" class="label">End date:</label>
       <input id="endDate" type="date" class = "textfield">
   </div>
+  <br>
+  
   <input type="submit" class="button" name="button" id="button" value="Search">
 </form>
 <script>

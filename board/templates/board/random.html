@@ -1,0 +1,83 @@
+<html>
+<style type="text/css">
+    .button {
+      text-align: center;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      display: block;
+      padding-right: 36px;
+      padding-left: 36px;
+      border: none;
+      background-color: #EB232F;
+      color: #FFFFFF;
+      cursor: pointer;
+    }
+    body {
+      background-color: #F5F5F5;
+      margin-top: 0px;
+      margin-right: 0px;
+      margin-bottom: 0px;
+      margin-left: 0px;
+    }
+    input{
+      font-family: muli, sans-serif;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 17px;
+    }
+    p,
+    a,
+    ul,
+    ol,
+    li,
+    span, 
+    label,
+    input{
+      font-family: muli, sans-serif;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 17px;
+    }
+    h1, h2{
+        font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+        font-style: normal;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    #header {
+        padding-top: 25px;
+        padding-bottom: 25px;
+        background-color: #C321C8;
+        border-bottom: 4px solid #EB232F;
+    }
+    #header h2 {
+        /*font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;*/
+        font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 42px;
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        text-transform: none;
+    }
+</style>
+<body>
+<header id=header> 
+  <h2>{{ question.question_text }}</h2>
+</header>
+  <p>{{ question.category }} for {{ question.score }}</p>
+  <p>Asked on {{ question.ask_date }} </p>
+<div id = 'id_1'>
+{% for a in question.answer_set.all %}
+	<input type="button" class="button" id="button1" onclick = "update('{{a.answer_text}}')" value="Reveal">
+{% endfor %}
+</div>
+</body>
+<html>
+<script type="text/javascript">
+	var answer;
+	function update(answer){
+    	document.getElementById('id_1').innerHTML = answer;
+}
+</script>
