@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
   <style type="text/css">
     body {
       background-color: #F5F5F5;
@@ -11,7 +10,6 @@
       margin-left: 0px;
     }
     p,
-    a,
     ul,
     ol,
     li,
@@ -25,8 +23,17 @@
       font-size: 17px;
     }
     #category{
+      font-size: 20px;
+      font-weight: bold;
       text-align: center;
       color: white;
+    }
+    #score{
+      text-align: center;
+      color: #FFCC00;
+      font-family: Helvetica, Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+      font-size: 30px;
+      font-weight: bold;
     }
     h1{
         font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
@@ -61,7 +68,9 @@
       background-color: #060CE9;
       height: 200px;
       text-decoration: none;  
+      text-align: center;
     }
+
     .text{
       color: black;
       vertical-align: middle;
@@ -81,25 +90,21 @@
   </style>
 </head>
 <body>
-
-  <header id = "header">
-    <h1> {{ header }}</h1>
-  </header>
-  <div class="button-container">
+  
     <table>
       <tr>
         {% for cat in cats %}
-          <td width=20vw><p>{{ cat }}</p></td>
+          <td width=20vw><p id="category">{{ cat }}</p></td>
         {% endfor %}
       </tr>
       <tr>
         {% for question in row1 %}
           <td height = 120px>
           {% if question %}
-            <a href="/board/{{question.id}}/" class="button">
-            <center class=text>
+            <a href="/board/{{question.id}}/" onclick = "this.style.background-color = 'red' "class="button">
+            <p id = "score">
               {{question.score}}
-              </center>
+            </p>
           </a>
           {% else %}
             <p> Free Question </p>
@@ -112,10 +117,10 @@
         {% for question in row2 %}
           <td height = 120px>
           {% if question %}
-            <a href="/board/{{question.id}}/" class="button">
-            <center class=text>
+            <a href="/board/{{question.id}}/" class="button" id = "button">
+            <p id = "score">
               {{question.score}}
-              </center>
+            </p>
           </a>
           {% else %}
             <p> Free Question </p>
@@ -129,9 +134,9 @@
           <td height = 120px>
           {% if question %}
             <a href="/board/{{question.id}}/" class="button">
-            <center class=text>
+            <p id = "score">
               {{question.score}}
-              </center>
+            </p>
           </a>
           {% else %}
             <p> Free Question </p>
@@ -145,9 +150,9 @@
           <td height = 120px>
           {% if question %}
             <a href="/board/{{question.id}}/" class="button">
-            <center class=text>
+            <p id = "score">
               {{question.score}}
-              </center>
+            </p>
           </a>
           {% else %}
             <p> Free Question </p>
@@ -161,9 +166,9 @@
           <td height = 120px>
           {% if question %}
             <a href="/board/{{question.id}}/" class="button">
-            <center class=text>
+            <p id = "score">
               {{question.score}}
-              </center>
+            </p>
           </a>
           {% else %}
             <p> Free Question </p>
@@ -175,23 +180,10 @@
     </table>
 
     
-  </div>
+  
   <div class="pagination">
     <span class="step-links">
-      {% if matches and matches.has_previous %}
-        <a href="?page=1">&laquo; first</a>
-              <a href="?page={{ matches.previous_page_number }}">previous</a>
-          {% endif %}
-          {% if matches %}
-          <span class="current">
-              Page {{ matches.number }} of {{ matches.paginator.num_pages }}
-          </span>
-          {% endif %}
-          {% if matches and matches.has_next %}
-              <a href="?page={{ matches.next_page_number }}">next</a>
-              <a href="?page={{ matches.paginator.num_pages }}">last &raquo;</a>
-          {% endif %}
-          <a href="/board">Return to search</a>
+        <a href="/board">Return to search</a>
     </span>
   </div>
 </body>
