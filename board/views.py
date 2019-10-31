@@ -68,14 +68,30 @@ def gameboard(request):
         cats.append(cat)
         header += " " + cat + ","
         matches = Question.objects.filter(category__iexact = cat)[:5]
+        
         for j, match in enumerate(matches):
-            questions[i + j*5] = match
+            questions[i*5+j] = match
+        
     header = header[:-1]
+    col1 = sorted(questions[0:5], key = lambda x: sort_rows(x))
+    col2 = sorted(questions[5:10], key = lambda x: sort_rows(x))
+    col3 = sorted(questions[10:15], key = lambda x: sort_rows(x))
+    col4 = sorted(questions[15:20], key = lambda x: sort_rows(x))
+    col5 = sorted(questions[20:25], key = lambda x: sort_rows(x))
+    
+    row1 = [col1[0], col2[0], col3[0], col4[0], col5[0]]
+    row2 = [col1[1], col2[1], col3[1], col4[1], col5[1]]
+    row3 = [col1[2], col2[2], col3[2], col4[2], col5[2]]
+    row4 = [col1[3], col2[3], col3[3], col4[3], col5[3]]
+    row5 = [col1[4], col2[4], col3[4], col4[4], col5[4]]
+    print(row1)
+    '''
     row1 = sorted(questions[0:5], key = lambda x: sort_rows(x))
     row2 = sorted(questions[5:10], key = lambda x: sort_rows(x))
     row3 = sorted(questions[10:15], key = lambda x: sort_rows(x))
     row4 = sorted(questions[15:20], key = lambda x: sort_rows(x))
     row5 = sorted(questions[20:25], key = lambda x: sort_rows(x))
+    '''
     return render(request, 'board/gameboard.html', {'header': header, 'cats': cats, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5': row5})
 
 def random_question(request):
