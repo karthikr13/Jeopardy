@@ -1,6 +1,7 @@
 from django.db import models
 import requests
 from django.utils.dateparse import parse_date
+import json
 # Create your models here.
 class Question(models.Model):
     question_text = models.CharField(max_length=400)
@@ -19,6 +20,24 @@ class Answer(models.Model):
     def __str__(self):
         return self.answer_text
 
+def get_categories():
+    offset = 0
+    cats = {}
+    while True:
+        url = 'http://jservice.io/api/categories/?count=100&offset=' + str(offset)
+        r  = requests.get(url)
+        info = r.json()
+        if info == []:
+            break
+        for cat in info:
+            cat_id = cat['id']
+            cat_name = cat['title']
+            cats[cat_name] = cat_id
+        offset += 100
+    cat_json = json.dumps(cats)
+    f = open("board/dict.json", "w")
+    f.write(cat_json)
+    f.close()
 def get_data():
     offset = 0
     while(True):
