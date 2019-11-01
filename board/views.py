@@ -4,7 +4,8 @@ from .models import Question
 from django.utils.dateparse import parse_date
 import random, requests, json
 # Create your views here.
-
+off = 0
+board = []
 class Question2():
     def __init__(self, question_text, score, ask_date, category, answer_text):
         self.question_text = question_text
@@ -25,13 +26,78 @@ class Question2():
 def index(request):
     return render(request, 'board/index.html')
 
-def search(request, search_string):
+def search_no_page(request, search_string):
+    return search(request, search_string, 1)
+def search(request, search_string, page_number):
+    global off
+    categories = None
+    with open('categories.json') as json_file:
+        categories = json.load(json_file)
+    if page_number == 1:
+        off = 0
+    url = 'http://jservice.io/api/clues?'
+    terms = ["", "", "", ""]
     split_search = search_string.split('&')
-    terms = [None, None, None, None]
     for i, term in enumerate(split_search):
         terms[i] = term.split('=')[1]
         if not terms[i]:
-            terms[i] = 'All'
+            terms[i]=""
+    
+    #The jservice API works backwards from its described functionality - min_date sets the end limit while max_date sets the start limit
+    category, value, max_date, min_date = terms
+    if category != "":
+        try:
+            category = categories[category]
+        except:
+            category = -1
+    else:
+        category = ""
+    #get 100 results, take 25 first valid results, and increment number of illegal elements such that next query starts from the next 25 valid elements
+    offset = (page_number-1) * 25 + off
+    if min_date != '""' and max_date == "":
+        max_date = min_date
+        min_date = max_date
+    elif max_date != '""' and min_date == "":
+        min_date = max_date
+        max_date = min_date
+    url+='category=' + str(category) + '&value='+str(value) + '&min_date=' + min_date + '&max_date=' + max_date + '&offset=' + str(offset)
+    print(url)
+    data =requests.get(url).json()
+    questions=[None]*25
+    i = 0
+    next_flag = None
+    for question in data:
+        q_text = question['question']
+        a_text = question['answer']
+        score = question['value']
+        airdate = question['airdate']
+        category = question['category']['title']
+        if None in [q_text, a_text, score, airdate, category] or score == 0:
+            continue
+        q_text = q_text.replace("&#39;", '')
+        a_text = a_text.replace("&#39;", '')
+        q_text = q_text.replace("'", '')
+        a_text = a_text.replace("'", '')
+        print(q_text)
+        q = Question2(q_text, score, airdate, category, a_text, i)
+        if i < 25:
+            questions[i] = q
+        if i >= 25:
+            next_flag = page_number+1
+            break
+        i += 1
+    global board
+    prev_flag = None
+    if page_number != 1:
+        prev_flag = page_number-1
+    board = questions
+    row1 = questions[0:5]
+    row2 = questions[5:10]
+    row3 = questions[10:15]
+    row4 = questions[15:20]
+    row5 = questions[20:25]
+    return render(request, 'board/category_sort.html', {'matches': questions, 'prev': prev_flag, 'next': next_flag, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5':row5})
+    '''
     matches = Question.objects.all()
     header = ''
     if terms[0] != 'All':
@@ -58,7 +124,7 @@ def search(request, search_string):
             header += ', asked before' + terms[3]
         terms[3] = parse_date(terms[3])
         matches = matches.filter(ask_date__lte = terms[3])
-
+    
     paginator = Paginator(matches, 25)
     try:
         page = request.GET.get('page')
@@ -71,6 +137,7 @@ def search(request, search_string):
         return render(request, 'board/category_sort.html', {'header': header, 'matches': results, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5':row5})
     except:
         return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
+    '''
 def sort_rows(x):
     if not x:
         return 10000
@@ -90,7 +157,6 @@ def clean(col):
         question.score = i * 100
         i += 1
     return col
-board = []
 def gameboard(request):
     questions = [None] * 25
     header = "Categories:"
@@ -180,7 +246,7 @@ def random_question(request):
             r  = requests.get(url)
             generated = r.json()[0]
             continue
-        question = Question2(q_text, score, airdate, category, a_text)
+        question = Question2(q_text, score, airdate, category, a_text, 0)
         '''
         except:
             url = 'http://jservice.io/api/random'
