@@ -2,9 +2,18 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Question
 from django.utils.dateparse import parse_date
-import random
+import random, requests
 # Create your views here.
 
+class Question2():
+    def __init__(self, question_text, score, ask_date, category, answer_text):
+        self.question_text = question_text
+        self.score = str(score)
+        self.ask_date = ask_date.split('T')[0]
+        self.category = category
+        self.answer_text = answer_text
+    def __str__(self):
+        return self.question_text + " " + self.score + " " + self.ask_date + " " + self.category + " " + self.answer_text
 def index(request):
     return render(request, 'board/index.html')
 
@@ -108,13 +117,37 @@ def gameboard(request):
 
 def random_question(request):
     question = None
+    url = 'http://jservice.io/api/random'
+    r  = requests.get(url)
+    generated = r.json()[0]
+    while not question:
+        
+        q_text = generated['question']
+        a_text = generated['answer']
+        score = generated['value']
+        airdate = generated['airdate']
+        category = generated['category']['title']
+        if None in [q_text, a_text, score, airdate, category] or score == 0:
+            url = 'http://jservice.io/api/random'
+            r  = requests.get(url)
+            generated = r.json()[0]
+            continue
+        question = Question2(q_text, score, airdate, category, a_text)
+        '''
+        except:
+            url = 'http://jservice.io/api/random'
+            r  = requests.get(url)
+            generated = r.json()[0]
+        '''
+    '''
     while not question:
         try:
             question = Question.objects.filter(pk__exact = random.randint(0, Question.objects.count()))[0]
         except:
             question = None
+    '''
     return render(request, 'board/random.html', {'question': question})
-
+    print(question)
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'board/detail.html', {'question': question})
