@@ -7,13 +7,6 @@ import random, requests, json
 off = 0
 board = []
 class Question2():
-    def __init__(self, question_text, score, ask_date, category, answer_text):
-        self.question_text = question_text
-        self.score = str(score)
-        self.ask_date = ask_date.split('T')[0]
-        self.category = category
-        self.answer_text = answer_text
-        self.id = 0
     def __init__(self, question_text, score, ask_date, category, answer_text, id):
         self.question_text = question_text
         self.score = str(score)
@@ -200,21 +193,8 @@ def gameboard(request):
         for j, match in enumerate(matches):
             questions[i*5+j] = match
         global board 
-        board = questions
-        '''
-        while not question:
-            try:
-                question = Question.objects.filter(pk__exact = random.randint(0, Question.objects.count()))[0]
-            except:
-                question = None
-        cat = question.category
-        cats.append(cat)
-        header += " " + cat + ","
-        matches = Question.objects.filter(category__iexact = cat)[:5]
-        
-        for j, match in enumerate(matches):
-            questions[i*5+j] = match
-        '''
+    board = questions
+
     header = header[:-1]
     col1 = (sorted(questions[0:5], key = lambda x: sort_rows(x)))
     col2 = (sorted(questions[5:10], key = lambda x: sort_rows(x)))
@@ -247,19 +227,6 @@ def random_question(request):
             generated = r.json()[0]
             continue
         question = Question2(q_text, score, airdate, category, a_text, 0)
-        '''
-        except:
-            url = 'http://jservice.io/api/random'
-            r  = requests.get(url)
-            generated = r.json()[0]
-        '''
-    '''
-    while not question:
-        try:
-            question = Question.objects.filter(pk__exact = random.randint(0, Question.objects.count()))[0]
-        except:
-            question = None
-    '''
     return render(request, 'board/random.html', {'question': question})
     print(question)
 def detail(request, question_id):
