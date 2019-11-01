@@ -99,18 +99,15 @@ def gameboard(request):
     row3 = [col1[2], col2[2], col3[2], col4[2], col5[2]]
     row4 = [col1[3], col2[3], col3[3], col4[3], col5[3]]
     row5 = [col1[4], col2[4], col3[4], col4[4], col5[4]]
-
-    '''
-    row1 = sorted(questions[0:5], key = lambda x: sort_rows(x))
-    row2 = sorted(questions[5:10], key = lambda x: sort_rows(x))
-    row3 = sorted(questions[10:15], key = lambda x: sort_rows(x))
-    row4 = sorted(questions[15:20], key = lambda x: sort_rows(x))
-    row5 = sorted(questions[20:25], key = lambda x: sort_rows(x))
-    '''
     return render(request, 'board/gameboard.html', {'header': header, 'cats': cats, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5': row5})
 
 def random_question(request):
-    question = get_object_or_404(Question, pk=random.randint(0, Question.objects.count()))
+    question = None
+    while not question:
+        try:
+            question = Question.objects.filter(pk__exact = random.randint(0, Question.objects.count()))[0]
+        except:
+            question = None
     return render(request, 'board/random.html', {'question': question})
 
 def detail(request, question_id):
