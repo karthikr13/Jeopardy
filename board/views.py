@@ -12,6 +12,14 @@ class Question2():
         self.ask_date = ask_date.split('T')[0]
         self.category = category
         self.answer_text = answer_text
+        self.id = 0
+    def __init__(self, question_text, score, ask_date, category, answer_text, id):
+        self.question_text = question_text
+        self.score = str(score)
+        self.ask_date = ask_date.split('T')[0]
+        self.category = category
+        self.answer_text = answer_text
+        self.id = id
     def __str__(self):
         return self.question_text + " " + self.score + " " + self.ask_date + " " + self.category + " " + self.answer_text
 def index(request):
@@ -82,6 +90,7 @@ def clean(col):
         question.score = i * 100
         i += 1
     return col
+board = []
 def gameboard(request):
     questions = [None] * 25
     header = "Categories:"
@@ -104,7 +113,7 @@ def gameboard(request):
                 cat = None
                 continue
             cats.append(cat)
-        matches = [None]*5
+        matches = set()
         j = 0
         for question in generated['clues']:
             q_text = question['question']
@@ -114,13 +123,18 @@ def gameboard(request):
             category = cat
             if None in [q_text, a_text, score, airdate, category] or score == 0:
                 continue
-            q = Question2(q_text, score, airdate, category, a_text)
-            if j >= len(matches):
+            q = Question2(q_text, score, airdate, category, a_text, i*5 + j)   
+            matches.add(q)
+            if len(matches) >= 5:
                 break
-            matches[j] = q
             j += 1
+        matches = list(matches)
+        while len(matches) < 5:
+            matches.append(None)
         for j, match in enumerate(matches):
             questions[i*5+j] = match
+        global board 
+        board = questions
         '''
         while not question:
             try:
@@ -183,5 +197,5 @@ def random_question(request):
     return render(request, 'board/random.html', {'question': question})
     print(question)
 def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    question = board[question_id]
     return render(request, 'board/detail.html', {'question': question})
