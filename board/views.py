@@ -232,10 +232,6 @@ def random_question(request):
 def detail(request, question_id):
     global board
     check = False
-    while not check:
-        try:
-            question = board[question_id]
-            check = True
-        except:
-            continue
+    question = board[question_id]
+    check = True
     return render(request, 'board/detail.html', {'question': question})
