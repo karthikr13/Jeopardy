@@ -231,7 +231,8 @@ def random_question(request):
     print(question)
 def detail(request, question_id):
     global board
-    check = False
-    question = board[question_id]
-    check = True
+    try:
+        question = board[question_id]
+    except:
+        return render(request, 'board/detail.html', {'question': None})
     return render(request, 'board/detail.html', {'question': question})

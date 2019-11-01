@@ -50,7 +50,7 @@
     }
 </style>
 <body width = 100% height = 100%>
-
+{% if question %}
 <button class = "button" onclick = "update('{{question.answer_text}}','{{question.question_text}}');">
   <p class="question" id = "question_text">{{ question.question_text}}</p>
   <p class="instruction" id = "instruction">
@@ -61,6 +61,12 @@
     {{question.category}} for {{question.score}}
   </p>
 </button>
+{% else %}
+<button class = "button" onclick = "this.action=/">
+  <p class="question" id = "question_text">Error loading question, refresh</p>
+  </p>
+</button>
+{% endif %}
 </body>
 </html>
 <script type="text/javascript">
