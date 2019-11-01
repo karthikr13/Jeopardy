@@ -46,7 +46,12 @@ def search(request, search_string):
     try:
         page = request.GET.get('page')
         results = paginator.get_page(page)
-        return render(request, 'board/category_sort.html', {'header': header, 'matches': results})
+        row1 = results[0:5]
+        row2 = results[5:10]
+        row3 = results[10:15]
+        row4 = results[15:20]
+        row5 = results[20:25]
+        return render(request, 'board/category_sort.html', {'header': header, 'matches': results, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5':row5})
     except:
         return render(request, 'board/category_sort.html', {'header': header, 'matches': None})
 def sort_rows(x):

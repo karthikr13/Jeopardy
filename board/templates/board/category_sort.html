@@ -1,103 +1,180 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style type="text/css">
+    body {
+      background-color: #F5F5F5;
+      margin-top: 0px;
+      margin-right: 0px;
+      margin-bottom: 0px;
+      margin-left: 0px;
+    }
+    p,
+    ul,
+    ol,
+    li,
+    button,
+    span, 
+    label,
+    input{
+      font-family: muli, sans-serif;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 17px;
+      text-decoration: none;
+    }
+    #category{
+    	font-family: Helvetica, Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+		color: #FFCC00;
+		font-size: 20px;
+		font-weight: bold;
+		text-align: center;
+		text-transform: uppercase;
+    }
+    #score{
+      text-align: center;
+      color: #FFCC00;
+      font-family: Helvetica, Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+      font-size: 20px;
+    }
+    h1{
+        font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+        font-style: normal;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+  
+    
+    .button{
+      text-align: center;
+      /*background-image: radial-gradient(#E199D2, #D848DE);*/
+      background-color: #060CE9;
+      height: 200px;
+      text-decoration: none;  
+      text-align: center;
+    }
 
-	<style type="text/css">
-		body {
-		  background-color: #F5F5F5;
-		  margin-top: 0px;
-		  margin-right: 0px;
-		  margin-bottom: 0px;
-		  margin-left: 0px;
-		}
-		p,
-		a,
-		ul,
-		ol,
-		li,
-		button,
-		span, 
-		label,
-		input{
-		  font-family: muli, sans-serif;
-		  font-style: normal;
-		  font-weight: 300;
-		  font-size: 17px;
-		}
-		h1{
-		    font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
-		    font-style: normal;
-		    font-weight: 400;
-		    text-transform: uppercase;
-		}
-		#header {
-		    padding-top: 25px;
-		    padding-bottom: 25px;
-		    background-color: #C321C8;
-		    border-bottom: 4px solid #EB232F;
-		}
-		#header h1 {
-		    /*font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;*/
-		    font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
-		    font-style: normal;
-		    font-weight: 400;
-		    font-size: 42px;
-		    text-align: center;
-		    margin-top: 0px;
-		    margin-bottom: 0px;
-		    text-transform: none;
-		}
-		.button-container{
-			width: 100%;
-			overflow-y: auto;
-		}
-		.button{
-			display: inline-flex;
-			text-align: center;
-			/*background-image: radial-gradient(#E199D2, #D848DE);*/
-			background-color: #060CE9;
-			border-radius: 20px;
-			height: 120px;
-			width: 200px;
-			float: left;
-			margin:2%;
-			text-decoration: none;	
-		}
-		.text{
-			color: black;
-			vertical-align: middle;
-			margin:auto;
-		}
-	</style>
+    .text{
+      color: black;
+      vertical-align: middle;
+      margin:auto;
+    }
+    #heading{
+    	text-align: center;
+    	font-size: 30px;
+    	color: white;
+    	text-transform: uppercase;
+    	font-weight: bold;
+    }
+    table{
+      width: 100%;
+      table-layout: fixed;
+      text-align: center;
+      border: 1px solid white;
+      border-collapse: collapse;
+      background-color: #060CE9;
+    }
+    td{
+      border: 1px solid white;
+    }
+  </style>
 </head>
 <body>
-	<header id = "header">
-		<h1> {{ header }}</h1>
-	</header>
-	<div class="button-container">
-		{% if matches %}
-			<ul>
-			{% for question in matches %}
-				{% if question %}
-					<a href="/board/{{question.id}}/" class="button">
-					<center class=text>
-					  {{question.category}} for {{question.score}}
-				    </center>
-					</a>
-				{% else %}
-					<button class="button">
-						<center class=text>
-						  Free question
-					    </center>
-					</button>
-				{% endif %}
-			{% endfor %}
-			</ul>
-		{% else %}
-	  <p>No questions</p>
-		{% endif %}
-	</div>
-	<div class="pagination">
+    <table>
+    	{%if matches %}
+      <th colspan=5>
+          <p id = "heading">{{ header }}</p>	
+      </th>
+      {%else%}
+        <th colspan=5>
+          <p id = "heading">No results for search {{ header }}</p>	
+      </th>
+      {%endif%}
+      <tr>
+        {% for question in row1 %}
+          <td height = 120px>
+          {% if question %}
+            <a href="/board/{{question.id}}/" onclick = "this.style.background-color = 'red' "class="button">
+            <p id = "category">
+              {{question.category}} for {{question.score}}
+            </p>
+          </a>
+          {% else %}
+            <p> Free Question </p>
+          {% endif %}
+        </td>
+        {% endfor %}
+      
+      </tr>
+      <tr>
+        {% for question in row2 %}
+          <td height = 120px>
+          {% if question %}
+            <a href="/board/{{question.id}}/" class="button" id = "button">
+            <p id = "category">
+              {{question.category}} for {{question.score}}
+            </p>
+          </a>
+          {% else %}
+            <p> Free Question </p>
+          {% endif %}
+        </td>
+        {% endfor %}
+      
+      </tr>
+      <tr>
+        {% for question in row3 %}
+          <td height = 120px>
+          {% if question %}
+            <a href="/board/{{question.id}}/" class="button">
+            <p id = "category">
+              {{question.category}} for {{question.score}}
+            </p>
+          </a>
+          {% else %}
+            <p> Free Question </p>
+          {% endif %}
+        </td>
+        {% endfor %}
+      
+      </tr>
+      <tr>
+        {% for question in row4 %}
+          <td height = 120px>
+          {% if question %}
+            <a href="/board/{{question.id}}/" class="button">
+            <p id = "category">
+              {{question.category}} for {{question.score}}
+            </p>
+          </a>
+          {% else %}
+            <p> Free Question </p>
+          {% endif %}
+        </td>
+        {% endfor %}
+      
+      </tr>
+      <tr>
+        {% for question in row5 %}
+          <td height = 120px>
+          {% if question %}
+            <a href="/board/{{question.id}}/" class="button">
+            <p id = "category">
+              {{question.category}} for {{question.score}}
+            </p>
+          </a>
+          {% else %}
+            <p> Free Question </p>
+          {% endif %}
+        </td>
+        {% endfor %}
+      
+      </tr>
+    </table>
+
+    
+  
+  <div class="pagination">
 		<span class="step-links">
 			{% if matches and matches.has_previous %}
 				<a href="?page=1">&laquo; first</a>
