@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Question
 from django.utils.dateparse import parse_date
-import random, requests
+import random, requests, json
 # Create your views here.
 
 class Question2():
@@ -66,7 +66,7 @@ def search(request, search_string):
 def sort_rows(x):
     if not x:
         return 10000
-    return x.score
+    return int(x.score)
 '''
 clean(col): method to ensure scores displayed in gameboard are unique and consistent across columns
 sometimes, questions collected may be of same value, leading to scores in a column such as [100, 100, 200, 300, 400]
@@ -86,8 +86,42 @@ def gameboard(request):
     questions = [None] * 25
     header = "Categories:"
     cats = []
+    categories = {}
+    with open('categories.json') as json_file:
+        categories = json.load(json_file)
     for i in range(0, 5):
         question = None
+        cat = None
+        generated = None
+        while not cat:
+            index = random.randint(0, len(categories))
+            cat = list(categories.keys())[index]
+            cat_id = categories[cat]
+            url = 'http://jservice.io/api/category?id='+str(cat_id)
+            r  = requests.get(url)
+            generated = r.json()
+            if generated['clues_count'] < 5:
+                cat = None
+                continue
+            cats.append(cat)
+        matches = [None]*5
+        j = 0
+        for question in generated['clues']:
+            q_text = question['question']
+            a_text = question['answer']
+            score = question['value']
+            airdate = question['airdate']
+            category = cat
+            if None in [q_text, a_text, score, airdate, category] or score == 0:
+                continue
+            q = Question2(q_text, score, airdate, category, a_text)
+            if j >= len(matches):
+                break
+            matches[j] = q
+            j += 1
+        for j, match in enumerate(matches):
+            questions[i*5+j] = match
+        '''
         while not question:
             try:
                 question = Question.objects.filter(pk__exact = random.randint(0, Question.objects.count()))[0]
@@ -100,13 +134,13 @@ def gameboard(request):
         
         for j, match in enumerate(matches):
             questions[i*5+j] = match
-        
+        '''
     header = header[:-1]
-    col1 = clean(sorted(questions[0:5], key = lambda x: sort_rows(x)))
-    col2 = clean(sorted(questions[5:10], key = lambda x: sort_rows(x)))
-    col3 = clean(sorted(questions[10:15], key = lambda x: sort_rows(x)))
-    col4 = clean(sorted(questions[15:20], key = lambda x: sort_rows(x)))
-    col5 = clean(sorted(questions[20:25], key = lambda x: sort_rows(x)))
+    col1 = (sorted(questions[0:5], key = lambda x: sort_rows(x)))
+    col2 = (sorted(questions[5:10], key = lambda x: sort_rows(x)))
+    col3 = (sorted(questions[10:15], key = lambda x: sort_rows(x)))
+    col4 = (sorted(questions[15:20], key = lambda x: sort_rows(x)))
+    col5 = (sorted(questions[20:25], key = lambda x: sort_rows(x)))
     
     row1 = [col1[0], col2[0], col3[0], col4[0], col5[0]]
     row2 = [col1[1], col2[1], col3[1], col4[1], col5[1]]
