@@ -7,19 +7,6 @@ from .models import Question
 #global vars
 off = 0 #tracks offset necessary for future API hits
 
-class Question2():
-    '''
-    class Question
-    tracks question, score, air date, category, answer, and position on board
-    '''
-    def __init__(self, question_text, score, ask_date, category, answer_text, id):
-        self.question_text = question_text
-        self.score = str(score)
-        self.ask_date = ask_date.split('T')[0]
-        self.category = category
-        self.answer_text = answer_text
-        self.id = id
-
 def index(request):
     '''homepage'''
     return render(request, 'board/index.html')
@@ -113,7 +100,6 @@ def search(request, search_string, page_number):
             q_text = q_text.replace("'", '')
             a_text = a_text.replace("'", '')
 
-            #q = Question2(q_text, score, airdate, category, a_text, i)
             if i < 25:
                 print(q_text, a_text, score, airdate, category)
                 q  = Question(question_text=q_text, category = category, score = score, ask_date = airdate, answer_text = a_text)
