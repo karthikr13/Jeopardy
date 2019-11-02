@@ -1,5 +1,6 @@
 # Jeopardy
 by Karthik Ramachandran
+
 Jeopardy board game using jservice.io API to collect questions.
 
 Hosted on heroku at https://karthik-jeopardy.herokuapp.com/.
