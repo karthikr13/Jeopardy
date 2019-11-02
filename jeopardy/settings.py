@@ -22,10 +22,10 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "#!u-_p@kpc@lz%-xpjr%trpk$_ekda*ticcgj7if0#&-2oktjs"
+SECRET_KEY = "SECRET_KEY"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Application definition
 
@@ -110,18 +110,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Change 'default' database configuration with $DATABASE_URL.
-#DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'jeopardy_db',
-        'USER': 'django',
-        'PASSWORD': 'django',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
-}
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 

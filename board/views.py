@@ -133,28 +133,6 @@ def search(request, search_string, page_number):
     row5 = questions[20:25]
     return render(request, 'board/category_sort.html', {'header': header, 'matches': questions, 'prev': prev_flag, 'next': next_flag, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5':row5})
 
-def sort_rows(x):
-    '''ensures blank squares at bottom'''
-    if not x:
-        return 10000
-    return int(x.score)
-
-def clean(col):
-    '''
-    clean(col): method to ensure scores displayed in gameboard are unique and consistent across columns
-    sometimes, questions collected may be of same value, leading to scores in a column such as [100, 100, 200, 300, 400]
-    sometimes, daily double rounds get combined with regular rounds, so some columns are multiples of 200 while others are multiples of 100
-    col: column to clean
-    returns cleaned column
-    '''
-    i = 1
-    for question in col:
-        if not question:
-            break
-        question.score = i * 100
-        i += 1
-    return col
-
 def gameboard(request):
     '''create gameboard of questions from random categories'''
     questions = [None] * 25
@@ -254,3 +232,48 @@ def detail(request, question_id):
     except:
         return render(request, 'board/detail.html', {'question': None})
     return render(request, 'board/detail.html', {'question': question})
+
+#non-user facing methods
+def sort_rows(x):
+    '''ensures blank squares at bottom'''
+    if not x:
+        return 10000
+    return int(x.score)
+
+def clean(col):
+    '''
+    clean(col): method to ensure scores displayed in gameboard are unique and consistent across columns
+    sometimes, questions collected may be of same value, leading to scores in a column such as [100, 100, 200, 300, 400]
+    sometimes, daily double rounds get combined with regular rounds, so some columns are multiples of 200 while others are multiples of 100
+    col: column to clean
+    returns cleaned column
+    '''
+    i = 1
+    for question in col:
+        if not question:
+            break
+        question.score = i * 100
+        i += 1
+    return col
+
+def get_categories():
+    '''
+    one time method call by developer that creates categories.json, which maps category strings to category ids used by jservice.io
+    '''
+    offset = 0
+    cats = {}
+    while True:
+        url = 'http://jservice.io/api/categories/?count=100&offset=' + str(offset)
+        r  = requests.get(url)
+        info = r.json()
+        if info == []:
+            break
+        for cat in info:
+            cat_id = cat['id']
+            cat_name = cat['title']
+            cats[cat_name] = cat_id
+        offset += 100
+    cat_json = json.dumps(cats)
+    f = open("board/dict.json", "w")
+    f.write(cat_json)
+    f.close()
