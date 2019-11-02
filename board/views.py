@@ -48,10 +48,11 @@ def search(request, search_string, page_number):
     else:
         category = ""
         header += "Any category for "
-    if value != "":
+    if value != "All":
         header += value + " points"
     else:
         header += "any point value"
+        value = ""
     #get 100 results, take 25 first valid results, and increment number of illegal elements such that next query starts from the next 25 valid elements
     offset = (page_number-1) * 25 + off
     min_check = False
@@ -208,6 +209,10 @@ def random_question(request):
             r  = requests.get(url)
             generated = r.json()[0]
             continue
+        q_text = q_text.replace("&#39;", '')
+        a_text = a_text.replace("&#39;", '')
+        q_text = q_text.replace("'", '')
+        a_text = a_text.replace("'", '')
         question = Question2(q_text, score, airdate, category, a_text, 0)
     return render(request, 'board/random.html', {'question': question})
     print(question)
