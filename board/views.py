@@ -133,7 +133,7 @@ def search(request, search_string, page_number):
 def gameboard(request):
     '''create gameboard of questions from random categories'''
     if Question.objects.count() > 500:
-        for q in Question.objects.all()[0:25]
+        for q in Question.objects.all()[0:25]:
             q.delete()
     questions = [None] * 25
     header = "Categories:"
@@ -203,7 +203,7 @@ def gameboard(request):
 def random_question(request):
     '''randomly generate a single question'''
     if Question.objects.count() > 500:
-        for q in Question.objects.all()[0:25]
+        for q in Question.objects.all()[0:25]:
             q.delete()
     question = None
     url = 'http://jservice.io/api/random'
