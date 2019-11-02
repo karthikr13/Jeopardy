@@ -232,8 +232,11 @@ def random_question(request):
 
 def detail(request, question_id):
     '''Displays question/answer pairing'''
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'board/detail.html', {'question': question})
+    try:
+        question = get_object_or_404(Question, pk=question_id)
+        return render(request, 'board/detail.html', {'question': question})
+    except:
+        return render(request, 'board/detail.html', {'question': None})
 
 #non-user facing methods
 def sort_rows(x):
