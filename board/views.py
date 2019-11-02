@@ -210,7 +210,8 @@ def random_question(request):
         q_text = generated['question']
         a_text = generated['answer']
         score = generated['value']
-        airdate = generated['airdate']
+        airdate = generated['airdate'].split('T')[0]
+        airdate = parse_date(airdate)
         category = generated['category']['title']
         if None in [q_text, a_text, score, airdate, category] or score == 0:
             url = 'http://jservice.io/api/random'
