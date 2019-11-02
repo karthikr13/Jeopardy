@@ -186,11 +186,11 @@ def gameboard(request):
 
     #sort columns
     header = header[:-1]
-    col1 = (sorted(questions[0:5], key = lambda x: sort_rows(x)))
-    col2 = (sorted(questions[5:10], key = lambda x: sort_rows(x)))
-    col3 = (sorted(questions[10:15], key = lambda x: sort_rows(x)))
-    col4 = (sorted(questions[15:20], key = lambda x: sort_rows(x)))
-    col5 = (sorted(questions[20:25], key = lambda x: sort_rows(x)))
+    col1 = clean(sorted(questions[0:5], key = lambda x: sort_rows(x)))
+    col2 = clean(sorted(questions[5:10], key = lambda x: sort_rows(x)))
+    col3 = clean(sorted(questions[10:15], key = lambda x: sort_rows(x)))
+    col4 = clean(sorted(questions[15:20], key = lambda x: sort_rows(x)))
+    col5 = clean(sorted(questions[20:25], key = lambda x: sort_rows(x)))
     
     row1 = [col1[0], col2[0], col3[0], col4[0], col5[0]]
     row2 = [col1[1], col2[1], col3[1], col4[1], col5[1]]
