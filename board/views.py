@@ -218,7 +218,6 @@ def random_question(request):
         airdate = parse_date(airdate)
         category = generated['category']['title']
         if None in [q_text, a_text, score, airdate, category] or score == 0:
-            url = 'http://jservice.io/api/random'
             r  = requests.get(url)
             generated = r.json()[0]
             continue
@@ -227,7 +226,7 @@ def random_question(request):
         q_text = q_text.replace("'", '')
         a_text = a_text.replace("'", '')
         question = Question(question_text=q_text, score=score, ask_date=airdate, category=category, answer_text=a_text)
-        q.save()
+        question.save()
     return render(request, 'board/random.html', {'question': question})
     print(question)
 
