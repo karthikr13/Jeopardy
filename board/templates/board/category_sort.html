@@ -10,13 +10,8 @@
       margin-left: 0px;
     }
     p,
-    ul,
-    ol,
-    li,
     button,
-    span, 
-    label,
-    input{
+    span {
       font-family: muli, sans-serif;
       font-style: normal;
       font-weight: 300;
@@ -25,11 +20,11 @@
     }
     #category{
     	font-family: Helvetica, Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
-		color: #FFCC00;
-		font-size: 20px;
-		font-weight: bold;
-		text-align: center;
-		text-transform: uppercase;
+  		color: #FFCC00;
+  		font-size: 20px;
+  		font-weight: bold;
+  		text-align: center;
+  		text-transform: uppercase;
     }
     #score{
       text-align: center;
@@ -37,17 +32,9 @@
       font-family: Helvetica, Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
       font-size: 20px;
     }
-    h1{
-        font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
-        font-style: normal;
-        font-weight: 400;
-        text-transform: uppercase;
-    }
-  
     
     .button{
       text-align: center;
-      /*background-image: radial-gradient(#E199D2, #D848DE);*/
       background-color: #060CE9;
       height: 200px;
       text-decoration: none;  
@@ -167,13 +154,9 @@
 				<a href="?page={{ prev }}">previous</a>
         	{% endif %}
         	{% if matches %}
-        	<!--span class="current">
-            	Page {{ matches.number }} of {{ matches.paginator.num_pages }}
-	        </span-->
 	        {% endif %}
 	        {% if matches and next %}
 	            <a href="page={{ next }}">next</a>
-	            <!--a href="?page={{ matches.paginator.num_pages }}">last &raquo;</a-->
 	        {% endif %}
 	        <a href="/board">Return to search</a>
 		</span>

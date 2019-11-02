@@ -1,6 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator
-from django.utils.dateparse import parse_date
 import random, requests, json
 
 #Defines backend of each URL
@@ -68,6 +66,7 @@ def search(request, search_string, page_number):
     else:
         header += "any point value"
         value = ""
+
     #get 100 results, take 25 first valid results, and increment number of illegal elements such that next query starts from the next 25 valid elements
     offset = (page_number-1) * 25 + off
     min_check = False
@@ -141,6 +140,7 @@ def gameboard(request):
     categories = {}
     with open('categories.json') as json_file:
         categories = json.load(json_file)
+
     #randomly select categories that have enough questions to be used
     for i in range(0, 5):
         question = None
@@ -184,6 +184,7 @@ def gameboard(request):
         global board 
     board = questions
 
+    #sort columns
     header = header[:-1]
     col1 = (sorted(questions[0:5], key = lambda x: sort_rows(x)))
     col2 = (sorted(questions[5:10], key = lambda x: sort_rows(x)))

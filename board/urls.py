@@ -18,7 +18,3 @@ urlpatterns = [
         path('<str:search_string>/page=<int:page_number>', views.search, name = 'search'),
         path('<str:search_string>/', views.search_no_page, name = 'search_no_page')
 ]
-'''
-path('<str:category>/', views.search_category, name = 'search'),
-        path('<str:category>/<int:score>/', views.search_category_score, name = 'search')
-'''
