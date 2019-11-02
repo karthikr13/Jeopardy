@@ -89,7 +89,7 @@ DATABASES = {
         'PORT': '5432'
     }
 }
-
+DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
