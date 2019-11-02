@@ -17,6 +17,7 @@ a,
 ul,
 ol,
 li,
+select,
 button,
 label,
 input{
@@ -143,6 +144,7 @@ h1, h2, h3, h4, h5 {
     </ul>
     <p>Or, press the "Random" button to try your hand at a random question!</p>
     <p>You can also play a game of Jeopardy by clicking the "Play Game" button.</p>
+    <p>Note that some questions are missing data. These questions will be represented only by a blue square.</p>
     <div class = "submitbuttons">
       <input type="submit" class="button" name="button" id="button2" formaction = "/board/random" value="Random"></input>
       <input type="submit" class="button" name="button" id="button3" formaction = "/board/gameboard" value="Play Game"></input>
@@ -159,7 +161,16 @@ h1, h2, h3, h4, h5 {
   </div>
     <div>
       <label for="textfield2" class="label">Point value:</label>
-      <input id="points" type="text" class="textfield">
+      <select id="points" type="text" class="textfield">
+        <option value="100">100</option>
+        <option value="200">200</option>
+        <option value="300">300</option>
+        <option value="400">400</option>
+        <option value="500">500</option>
+        <option value="600">600</option>
+        <option value="800">800</option>
+        <option value="1000">1000</option>
+      </select>
 	</div>
 	<div>
       <label for="textfield2" class="label">Start date:</label>
