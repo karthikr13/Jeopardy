@@ -1,13 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 import random, requests, json
-
+from django.utils.dateparse import parse_date
+from .models import Question
 #Defines backend of each URL
 
 #global vars
 off = 0 #tracks offset necessary for future API hits
-board = [] #tracks position of each question on board
 
-class Question():
+class Question2():
     '''
     class Question
     tracks question, score, air date, category, answer, and position on board
@@ -44,10 +44,12 @@ def search(request, search_string, page_number):
     terms = ["", "", "", ""]
     split_search = search_string.split('&')
     for i, term in enumerate(split_search):
-        terms[i] = term.split('=')[1]
-        if not terms[i]:
+        try:
+            terms[i] = term.split('=')[1]
+            if not terms[i]:
+                terms[i]=""
+        except:
             terms[i]=""
-    
     #The jservice API date function works strangely
     #If both min_date and max_date are provided, it works as expected
     #But if only one is provided, it works opposite of expected
@@ -85,6 +87,9 @@ def search(request, search_string, page_number):
         min_date = max_date
         max_date = ""
 
+    #empty backend DB on new page to avoid Heroku overflow on large queries
+    for q in Question.objects.all():
+        q.delete()
     #hit API
     url+='category=' + str(category) + '&value='+str(value) + '&min_date=' + min_date + '&max_date=' + max_date + '&offset=' + str(offset)
     data =requests.get(url).json()
@@ -96,7 +101,9 @@ def search(request, search_string, page_number):
             q_text = question['question']
             a_text = question['answer']
             score = question['value']
-            airdate = question['airdate']
+            airdate=question['airdate'].split('T')[0]
+            airdate=parse_date(airdate)
+            #print()
             category = question['category']['title']
             if None in [q_text, a_text, score, airdate, category] or score == 0:
                 continue
@@ -106,24 +113,27 @@ def search(request, search_string, page_number):
             q_text = q_text.replace("'", '')
             a_text = a_text.replace("'", '')
 
-            q = Question(q_text, score, airdate, category, a_text, i)
+            #q = Question2(q_text, score, airdate, category, a_text, i)
             if i < 25:
+                print(q_text, a_text, score, airdate, category)
+                q  = Question(question_text=q_text, category = category, score = score, ask_date = airdate, answer_text = a_text)
+                print(q)
                 questions[i] = q
+                q.save()
             if i >= 25:
                 #check if there is a next page
                 next_flag = page_number+1
                 break
             i += 1
+        #hit if broken format on question
         except:
             break
-    global board
 
     #check if there is a previous page
     prev_flag = None
     if page_number != 1:
         prev_flag = page_number-1
-    board = questions
-
+    print(questions)
     #allow for table entry in HTML
     row1 = questions[0:5]
     row2 = questions[5:10]
@@ -134,6 +144,8 @@ def search(request, search_string, page_number):
 
 def gameboard(request):
     '''create gameboard of questions from random categories'''
+    for q in Question.objects.all():
+        q.delete()
     questions = [None] * 25
     header = "Categories:"
     cats = []
@@ -163,7 +175,8 @@ def gameboard(request):
             q_text = question['question']
             a_text = question['answer']
             score = question['value']
-            airdate = question['airdate']
+            airdate=question['airdate'].split('T')[0]
+            airdate=parse_date(airdate)
             category = cat
             if None in [q_text, a_text, score, airdate, category] or score == 0:
                 continue
@@ -171,7 +184,8 @@ def gameboard(request):
             a_text = a_text.replace("&#39;", '')
             q_text = q_text.replace("'", '')
             a_text = a_text.replace("'", '')
-            q = Question(q_text, score, airdate, category, a_text, i*5 + j)   
+            q = Question(question_text=q_text, score=score, ask_date=airdate, category=category, answer_text=a_text)   
+            q.save()
             matches.add(q)
             if len(matches) >= 5:
                 break
@@ -181,8 +195,6 @@ def gameboard(request):
             matches.append(None)
         for j, match in enumerate(matches):
             questions[i*5+j] = match
-        global board 
-    board = questions
 
     #sort columns
     header = header[:-1]
@@ -201,6 +213,8 @@ def gameboard(request):
 
 def random_question(request):
     '''randomly generate a single question'''
+    for q in Question.objects.all():
+        q.delete()
     question = None
     url = 'http://jservice.io/api/random'
     r  = requests.get(url)
@@ -221,17 +235,14 @@ def random_question(request):
         a_text = a_text.replace("&#39;", '')
         q_text = q_text.replace("'", '')
         a_text = a_text.replace("'", '')
-        question = Question(q_text, score, airdate, category, a_text, 0)
+        question = Question(question_text=q_text, score=score, ask_date=airdate, category=category, answer_text=a_text)
+        q.save()
     return render(request, 'board/random.html', {'question': question})
     print(question)
 
 def detail(request, question_id):
     '''Displays question/answer pairing'''
-    global board
-    try:
-        question = board[question_id]
-    except:
-        return render(request, 'board/detail.html', {'question': None})
+    question = get_object_or_404(Question, pk=question_id)
     return render(request, 'board/detail.html', {'question': question})
 
 #non-user facing methods
