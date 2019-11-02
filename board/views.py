@@ -42,6 +42,7 @@ def search(request, search_string, page_number):
     #But if only one is provided, it works opposite of expected
     category, value, min_date, max_date = terms
     if category != "":
+        category = category.lower()
         header += category + " for "
         try:
             category = categories[category]
@@ -75,8 +76,9 @@ def search(request, search_string, page_number):
         max_date = ""
 
     #empty backend DB on new page to avoid Heroku overflow on large queries
-    for q in Question.objects.all():
-        q.delete()
+    if Question.objects.count() > 500:
+        for q in Question.objects.all():
+            q.delete()
     #hit API
     url+='category=' + str(category) + '&value='+str(value) + '&min_date=' + min_date + '&max_date=' + max_date + '&offset=' + str(offset)
     data =requests.get(url).json()
@@ -130,8 +132,9 @@ def search(request, search_string, page_number):
 
 def gameboard(request):
     '''create gameboard of questions from random categories'''
-    for q in Question.objects.all():
-        q.delete()
+    if Question.objects.count() > 500:
+        for q in Question.objects.all():
+            q.delete()
     questions = [None] * 25
     header = "Categories:"
     cats = []
@@ -199,8 +202,9 @@ def gameboard(request):
 
 def random_question(request):
     '''randomly generate a single question'''
-    for q in Question.objects.all():
-        q.delete()
+    if Question.objects.count() > 500:
+        for q in Question.objects.all():
+            q.delete()
     question = None
     url = 'http://jservice.io/api/random'
     r  = requests.get(url)
