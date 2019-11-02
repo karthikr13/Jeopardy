@@ -6,6 +6,7 @@ Created on Thu Oct 17 22:44:15 2019
 @author: karthik
 """
 
+#defines each possible URL in the /board directory that the user can hit
 from django.urls import path
 from . import views
 

@@ -1,12 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from .models import Question
 from django.utils.dateparse import parse_date
 import random, requests, json
-# Create your views here.
-off = 0
-board = []
-class Question2():
+
+#Defines backend of each URL
+
+#global vars
+off = 0 #tracks offset necessary for future API hits
+board = [] #tracks position of each question on board
+
+class Question():
+    '''
+    class Question
+    tracks question, score, air date, category, answer, and position on board
+    '''
     def __init__(self, question_text, score, ask_date, category, answer_text, id):
         self.question_text = question_text
         self.score = str(score)
@@ -14,14 +21,20 @@ class Question2():
         self.category = category
         self.answer_text = answer_text
         self.id = id
-    def __str__(self):
-        return self.question_text + " " + self.score + " " + self.ask_date + " " + self.category + " " + self.answer_text
+
 def index(request):
+    '''homepage'''
     return render(request, 'board/index.html')
 
 def search_no_page(request, search_string):
+    '''queries will go here without a page number, treat as if page_number = 1'''
     return search(request, search_string, 1)
+
 def search(request, search_string, page_number):
+    '''
+    hits API to get query results
+    pagination controlled through page_number and offset variance
+    '''
     global off
     header = "Results for: "
     categories = None
@@ -37,7 +50,9 @@ def search(request, search_string, page_number):
         if not terms[i]:
             terms[i]=""
     
-    #The jservice API works backwards from its described functionality - min_date sets the end limit while max_date sets the start limit
+    #The jservice API date function works strangely
+    #If both min_date and max_date are provided, it works as expected
+    #But if only one is provided, it works opposite of expected
     category, value, min_date, max_date = terms
     if category != "":
         header += category + " for "
@@ -66,12 +81,13 @@ def search(request, search_string, page_number):
             header += ", asked before " + max_date
     if min_date != '""' and max_date == "":
         max_date = min_date
-        min_date = max_date
+        min_date = ""
     elif max_date != '""' and min_date == "":
         min_date = max_date
-        max_date = min_date
+        max_date = ""
+
+    #hit API
     url+='category=' + str(category) + '&value='+str(value) + '&min_date=' + min_date + '&max_date=' + max_date + '&offset=' + str(offset)
-    print(url)
     data =requests.get(url).json()
     questions=[None]*25
     i = 0
@@ -85,43 +101,52 @@ def search(request, search_string, page_number):
             category = question['category']['title']
             if None in [q_text, a_text, score, airdate, category] or score == 0:
                 continue
+            #single quotes in question or answer mess with Javascript
             q_text = q_text.replace("&#39;", '')
             a_text = a_text.replace("&#39;", '')
             q_text = q_text.replace("'", '')
             a_text = a_text.replace("'", '')
-            print(q_text)
-            q = Question2(q_text, score, airdate, category, a_text, i)
+
+            q = Question(q_text, score, airdate, category, a_text, i)
             if i < 25:
                 questions[i] = q
             if i >= 25:
+                #check if there is a next page
                 next_flag = page_number+1
                 break
             i += 1
         except:
             break
     global board
+
+    #check if there is a previous page
     prev_flag = None
     if page_number != 1:
         prev_flag = page_number-1
     board = questions
+
+    #allow for table entry in HTML
     row1 = questions[0:5]
     row2 = questions[5:10]
     row3 = questions[10:15]
     row4 = questions[15:20]
     row5 = questions[20:25]
     return render(request, 'board/category_sort.html', {'header': header, 'matches': questions, 'prev': prev_flag, 'next': next_flag, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5':row5})
+
 def sort_rows(x):
+    '''ensures blank squares at bottom'''
     if not x:
         return 10000
     return int(x.score)
-'''
-clean(col): method to ensure scores displayed in gameboard are unique and consistent across columns
-sometimes, questions collected may be of same value, leading to scores in a column such as [100, 100, 200, 300, 400]
-sometimes, daily double rounds get combined with regular rounds, so some columns are multiples of 200 while others are multiples of 100
-col: column to clean
-returns cleaned column
-'''
+
 def clean(col):
+    '''
+    clean(col): method to ensure scores displayed in gameboard are unique and consistent across columns
+    sometimes, questions collected may be of same value, leading to scores in a column such as [100, 100, 200, 300, 400]
+    sometimes, daily double rounds get combined with regular rounds, so some columns are multiples of 200 while others are multiples of 100
+    col: column to clean
+    returns cleaned column
+    '''
     i = 1
     for question in col:
         if not question:
@@ -129,13 +154,16 @@ def clean(col):
         question.score = i * 100
         i += 1
     return col
+
 def gameboard(request):
+    '''create gameboard of questions from random categories'''
     questions = [None] * 25
     header = "Categories:"
     cats = []
     categories = {}
     with open('categories.json') as json_file:
         categories = json.load(json_file)
+    #randomly select categories that have enough questions to be used
     for i in range(0, 5):
         question = None
         cat = None
@@ -165,7 +193,7 @@ def gameboard(request):
             a_text = a_text.replace("&#39;", '')
             q_text = q_text.replace("'", '')
             a_text = a_text.replace("'", '')
-            q = Question2(q_text, score, airdate, category, a_text, i*5 + j)   
+            q = Question(q_text, score, airdate, category, a_text, i*5 + j)   
             matches.add(q)
             if len(matches) >= 5:
                 break
@@ -193,6 +221,7 @@ def gameboard(request):
     return render(request, 'board/gameboard.html', {'header': header, 'cats': cats, 'row1': row1, 'row2': row2, 'row3': row3, 'row4': row4, 'row5': row5})
 
 def random_question(request):
+    '''randomly generate a single question'''
     question = None
     url = 'http://jservice.io/api/random'
     r  = requests.get(url)
@@ -213,10 +242,12 @@ def random_question(request):
         a_text = a_text.replace("&#39;", '')
         q_text = q_text.replace("'", '')
         a_text = a_text.replace("'", '')
-        question = Question2(q_text, score, airdate, category, a_text, 0)
+        question = Question(q_text, score, airdate, category, a_text, 0)
     return render(request, 'board/random.html', {'question': question})
     print(question)
+
 def detail(request, question_id):
+    '''Displays question/answer pairing'''
     global board
     try:
         question = board[question_id]
