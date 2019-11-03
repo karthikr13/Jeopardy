@@ -76,7 +76,7 @@ def search(request, search_string, page_number):
         max_date = ""
 
     #empty backend DB on new page to avoid Heroku overflow on large queries
-    if Question.objects.count() > 500:
+    if Question.objects.count() > 5000:
         for q in Question.objects.all()[0:25]:
             q.delete()
     #hit API
@@ -132,7 +132,7 @@ def search(request, search_string, page_number):
 
 def gameboard(request):
     '''create gameboard of questions from random categories'''
-    if Question.objects.count() > 500:
+    if Question.objects.count() > 5000:
         for q in Question.objects.all()[0:25]:
             q.delete()
     questions = [None] * 25
@@ -202,7 +202,7 @@ def gameboard(request):
 
 def random_question(request):
     '''randomly generate a single question'''
-    if Question.objects.count() > 500:
+    if Question.objects.count() > 5000:
         for q in Question.objects.all()[0:25]:
             q.delete()
     question = None
