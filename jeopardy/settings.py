@@ -20,7 +20,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 #sensitive information has been removed from this file in version control
 
-SECRET_KEY = "#!u-_p@kpc@lz%-xpjr%trpk$_ekda*ticcgj7if0#&-2oktjs"
+SECRET_KEY = "SECRET_KEY"
 
 DEBUG = False
 
@@ -72,9 +72,9 @@ WSGI_APPLICATION = 'jeopardy.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'jeopardy_db',
-        'USER': 'django',
-        'PASSWORD': 'django',
+        'NAME': 'db_name',
+        'USER': 'db_user',
+        'PASSWORD': 'db_pass',
         'HOST': 'localhost',
         'PORT': '5432'
     }
