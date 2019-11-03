@@ -9,6 +9,10 @@ off = 0 #tracks offset necessary for future API hits
 
 def index(request):
     '''homepage'''
+    if Question.objects.count() > 5000:
+        for q in Question.objects.all()[0:1000]:
+            q.delete()
+
     return render(request, 'board/index.html')
 
 def search_no_page(request, search_string):
